@@ -1,2 +1,13 @@
-# easylog
-Python logging helper, easy to use.
+# sharklog
+
+Python logging helper.
+
+## Quick Start
+
+```bash
+python -m pip install sharklog
+```
+
+```python
+from sharklog import logging
+```

@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sharklog"
+version = "0.0.1"
+description = "A Python logging helper"
+readme = "README.md"
+authors = [{name = "Shi Changshan", email = "changshanshi@outlook.com"}]
+license = {file = "LICENSE"}
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["logging", "helper"]
+
+[project.urls]
+Homepage = "https://github.com/Bardreamaster/easylog"
