@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sharklog"
-version = "0.0.2"
+version = "0.0.3"
 description = "A Python logging helper"
 readme = "README.md"
 authors = [{name = "Shi Changshan", email = "changshanshi@outlook.com"}]
@@ -16,4 +16,4 @@ classifiers = [
 keywords = ["logging", "helper"]
 
 [project.urls]
-Homepage = "https://github.com/Bardreamaster/easylog"
+Homepage = "https://github.com/Bardreamaster/sharklog"
