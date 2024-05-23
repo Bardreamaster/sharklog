@@ -1,4 +1,4 @@
-name: PythonLint
+name: PythonFormatter
 
 on: [push, pull_request]
 
