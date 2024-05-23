@@ -1,10 +1,9 @@
-import sys
 import inspect
 import logging
-from logging import *
+import sys
+from logging import *  # noqa
 
-from sharklog import utils
-from sharklog import settings
+from sharklog import settings, utils
 
 
 def init(*, debug=False, level=None, **kwargs):

@@ -1,8 +1,8 @@
+import dataclasses
 import inspect
 import logging
-from typing import Dict, Tuple
-import dataclasses
 from pprint import pformat
+from typing import Dict, Tuple
 
 
 def create_logger_record(
