@@ -16,26 +16,27 @@ def init(name: str=None, debug: bool=False, level=None, **kwargs):
 
     kwargs["level"] = kwargs.get("level", settings.DEFAULT_LEVEL)
     kwargs["format"] = kwargs.get("format", settings.DEFAULT_FORMAT)
-    logging.basicConfig(**kwargs)
 
     custom_format = kwargs.get("format")
-    if custom_format:
-        formatter = logging.Formatter(
-            fmt=custom_format,
-            datefmt=kwargs.get("datefmt"),
-            style=kwargs.get("style", "%"),
-        )
-        handler = logging.StreamHandler()
-        handler.setFormatter(formatter)
-        frame = inspect.currentframe().f_back
-        if not name:
-            name = frame.f_globals["__name__"]
-            if name == "__main__":
-                try:
-                    name = frame.f_globals["__file__"].split(".")[0].replace("/", ".")
-                except KeyError:
-                    name = "interactive"
-        logging.getLogger(name).addHandler(handler)
+    formatter = logging.Formatter(
+        fmt=custom_format,
+        datefmt=kwargs.get("datefmt"),
+        style=kwargs.get("style", "%"),
+    )
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
+    frame = inspect.currentframe().f_back
+    if not name:
+        name = frame.f_globals["__name__"]
+        if name == "__main__":
+            try:
+                name = frame.f_globals["__file__"].split(".")[0].replace("/", ".")
+            except KeyError:
+                name = "interactive"
+    logger = logging.getLogger(name)
+    logger.addHandler(handler)
+    logger.setLevel(kwargs["level"])
+    return logger
 
 def reset_all(debug=False, level=None, **kwargs):
     if debug:

@@ -10,35 +10,21 @@ Python logging helper.
 - Install sharklog:
 
 ```bash
-python -m pip install sharklog
+python3 -m pip install sharklog
 ```
 
 - Use in standalone script:
 
 ```python
 # standalone.py
-from sharklog import logging
+import sharklog
 
-logging.init(debug=True)    # init current logger with level=logging.DEBUG
-# or logging.init(level=logging.DEBUG)
-logging.debug("debug message")
-logging.info("info message")
-logging.warning("warning message")
-logging.error("error message")
-```
+sharklog.init(debug=True)    # init current logger with level=sharklog.DEBUG
 
-If you want to change logging level for a module, you can set it in the module by:
-
-```python
-from sharklog import logging
-logging.getLogger().setLevel(logging.DEBUG)
-```
-
-or set it outside the module by specifying the logger name:
-
-```python
-from sharklog import logging
-logging.getLogger("module_name").setLevel(logging.DEBUG)
+sharklog.debug("debug message")
+sharklog.info("info message")
+sharklog.warning("warning message")
+sharklog.error("error message")
 ```
 
 The default format of log messages is:
@@ -47,7 +33,25 @@ The default format of log messages is:
 "[%(levelname)s]: %(message)s [%(asctime)s](%(filename)s:%(lineno)d)"
 ```
 
-## Usage in Package Development
+## Usage
+
+### Use in standalone script
+
+If you want to change logging level for a module, you can set it in the module by:
+
+```python
+import sharklog
+sharklog.getLogger().setLevel(logging.DEBUG)
+```
+
+or set it outside the module by specifying the logger name:
+
+```python
+import sharklog
+sharklog.getLogger("module_name").setLevel(logging.DEBUG)
+```
+
+### Usage in Package Development
 
 Now I assume your file structure is like this:
 
