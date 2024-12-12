@@ -34,7 +34,17 @@ from logging import (
     setLogRecordFactory,
     shutdown,
 )
-from .logging import critical, debug, error, exception, getLogger, info, init, warning, reset_all
+from .logging import (
+    critical,
+    debug,
+    error,
+    exception,
+    getLogger,
+    info,
+    init,
+    warning,
+    reset_all,
+)
 
 __all__ = [
     "BASIC_FORMAT",

@@ -5,7 +5,7 @@ import sys
 from sharklog import settings, utils
 
 
-def init(name: str=None, debug: bool=False, level=None, **kwargs):
+def init(name: str = None, debug: bool = False, level=None, **kwargs):
     if debug:
         settings.DEFAULT_LEVEL = logging.DEBUG
     elif level is not None:
@@ -37,6 +37,7 @@ def init(name: str=None, debug: bool=False, level=None, **kwargs):
     logger.addHandler(handler)
     logger.setLevel(kwargs["level"])
     return logger
+
 
 def reset_all(debug=False, level=None, **kwargs):
     if debug:
