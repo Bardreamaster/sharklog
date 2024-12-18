@@ -34,6 +34,7 @@ from logging import (
     setLogRecordFactory,
     shutdown,
 )
+
 from .logging import (
     critical,
     debug,
@@ -42,8 +43,8 @@ from .logging import (
     getLogger,
     info,
     init,
-    warning,
     reset_all,
+    warning,
 )
 
 __all__ = [
