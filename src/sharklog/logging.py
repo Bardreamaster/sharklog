@@ -30,7 +30,7 @@ def init(name: str = None, debug: bool = False, level=None, **kwargs):
         name = frame.f_globals["__name__"]
         if name == "__main__":
             try:
-                name = frame.f_globals["__file__"].split(".")[0].replace("/", ".")
+                name = frame.f_globals["__file__"].split(".")[0].split("/")[-1]
             except KeyError:
                 name = "interactive"
     logger = logging.getLogger(name)
