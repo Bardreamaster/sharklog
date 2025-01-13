@@ -24,6 +24,12 @@ dev = [
     "sharklog",
 ]
 
+[tool.uv]
+environments = [
+    "sys_platform == 'darwin'",
+    "sys_platform == 'linux'",
+]
+
 [tool.uv.sources]
 sharklog = { workspace = true }
 
