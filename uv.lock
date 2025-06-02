@@ -1,0 +1,17 @@
+version = 1
+requires-python = ">=3.10"
+
+[[package]]
+name = "sharklog"
+version = "0.1.0"
+source = { editable = "." }
+
+[package.dev-dependencies]
+dev = [
+    { name = "sharklog" },
+]
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [{ name = "sharklog", editable = "." }]
