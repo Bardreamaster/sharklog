@@ -34,6 +34,18 @@ def init(name: str = None, debug: bool = False, level=None, **kwargs):
                 name = frame.f_globals["__file__"].split(".")[0].replace("/", ".")
             except KeyError:
                 name = "interactive"
+            if name.endswith("__main__"):
+                parts = name.split(".")
+                if len(parts) >= 2:
+                    # Find the last non-empty part before __main__
+                    for i in range(len(parts) - 2, -1, -1):
+                        if parts[i]:
+                            name = f"{parts[i]}.__main__"
+                            break
+                    else:
+                        name = "__main__"
+                else:
+                    name = "__main__"
     logger = logging.getLogger(name)
     logger.addHandler(handler)
     logger.setLevel(kwargs["level"])
