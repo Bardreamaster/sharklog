@@ -62,3 +62,17 @@ def format_message(value) -> str:
     if not isinstance(value, str):
         value = pformat(value)
     return value
+
+
+def parse_level(level) -> int:
+    """Convert a level number or a case-insensitive name ("debug") to an int."""
+    if isinstance(level, int):
+        return level
+    if isinstance(level, str):
+        name = level.strip().upper()
+        if name.isdigit():
+            return int(name)
+        value = logging.getLevelName(name)
+        if isinstance(value, int):
+            return value
+    raise ValueError(f"Unknown level: {level!r}")
