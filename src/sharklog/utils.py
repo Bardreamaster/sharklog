@@ -34,18 +34,36 @@ def create_logger_record(
 
 
 def parse_name(custom_name: str, frame_info: Dict) -> Tuple[str, str]:
-    module_name = custom_name or frame_info["__name__"]
-    if module_name == "__main__":
-        try:
-            module_name = frame_info["__file__"].split(".")[0].replace("/", ".")
-        except KeyError:
-            module_name = "interactive"
+    module_name = custom_name or resolve_name(frame_info)
     parent_module_name = module_name.split(".")[0]
     return module_name, parent_module_name
 
 
 def parse_filename(frame_info: Dict) -> str:
     return frame_info.get("__file__", "interactive")
+
+
+def resolve_name(frame_info: Dict) -> str:
+    """Logger name for the module whose globals are ``frame_info``.
+
+    Imported modules use their ``__name__``. For the entry point
+    (``__name__ == "__main__"``) a more useful name is derived:
+
+    - ``python -m pkg.tool``: the real module name, ``pkg.tool``
+      (``pkg.__main__`` for ``python -m pkg``);
+    - ``python path/to/script.py``: the file name, ``script``;
+    - interactive sessions / ``python -c``: ``interactive``.
+    """
+    name = frame_info.get("__name__") or "interactive"
+    if name != "__main__":
+        return name
+    spec = frame_info.get("__spec__")
+    if spec is not None and spec.name:
+        return spec.name
+    file_name = frame_info.get("__file__")
+    if file_name:
+        return inspect.getmodulename(file_name) or "__main__"
+    return "interactive"
 
 
 def format_message(value) -> str:
