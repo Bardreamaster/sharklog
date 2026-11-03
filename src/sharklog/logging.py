@@ -60,15 +60,16 @@ def reset_all(debug=False, level=None, **kwargs):
     kwargs["format"] = kwargs.get("format", settings.DEFAULT_FORMAT)
     logging.basicConfig(**kwargs)
 
-    custom_format = kwargs.get("format")
-    if custom_format:
-        formatter = logging.Formatter(
-            fmt=custom_format,
-            datefmt=kwargs.get("datefmt"),
-            style=kwargs.get("style", "%"),
-        )
-        for handler in logging.root.handlers:
-            handler.setFormatter(formatter)
+    # basicConfig() is a no-op once the root logger has handlers (e.g. on a
+    # second reset_all() call), so apply the level and format explicitly.
+    logging.root.setLevel(kwargs["level"])
+    formatter = logging.Formatter(
+        fmt=kwargs["format"],
+        datefmt=kwargs.get("datefmt"),
+        style=kwargs.get("style", "%"),
+    )
+    for handler in logging.root.handlers:
+        handler.setFormatter(formatter)
 
 
 def getLogger(name=None):
