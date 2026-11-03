@@ -7,14 +7,12 @@ from sharklog.formatter import ColoredFormatter
 
 
 def init(name: str = None, debug: bool = False, level=None, **kwargs):
-    kwargs["level"] = kwargs.get("level", settings.DEFAULT_LEVEL)
     if debug:
         kwargs["level"] = logging.DEBUG
     elif level is not None:
-        try:
-            kwargs["level"] = level
-        except KeyError:
-            kwargs["level"] = logging.DEBUG
+        kwargs["level"] = utils.parse_level(level)
+    else:
+        kwargs["level"] = settings.DEFAULT_LEVEL
 
     kwargs["format"] = kwargs.get("format", settings.DEFAULT_FORMAT)
 
@@ -56,10 +54,7 @@ def reset_all(debug=False, level=None, **kwargs):
     if debug:
         settings.DEFAULT_LEVEL = logging.DEBUG
     elif level is not None:
-        try:
-            settings.DEFAULT_LEVEL = level
-        except KeyError:
-            settings.DEFAULT_LEVEL = logging.DEBUG
+        settings.DEFAULT_LEVEL = utils.parse_level(level)
 
     kwargs["level"] = kwargs.get("level", settings.DEFAULT_LEVEL)
     kwargs["format"] = kwargs.get("format", settings.DEFAULT_FORMAT)
