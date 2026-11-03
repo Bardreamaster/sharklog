@@ -6,10 +6,15 @@ from typing import Dict, Tuple
 
 
 def create_logger_record(
-    level, message, *args, name: str = "", exc_info=None, **kwargs
+    level, message, *args, name: str = "", exc_info=None, stacklevel=1, **kwargs
 ) -> bool:
-    frame = inspect.currentframe().f_back.f_back.f_back  # type: ignore
-    assert frame
+    """Create and dispatch a record on behalf of a public sharklog function.
+
+    Must be called directly from the public function (``sharklog.info`` etc.).
+    ``stacklevel`` follows the standard library meaning: 1 attributes the
+    record to the code calling that public function, 2 to its caller, ...
+    """
+    frame = _caller_frame(stacklevel + 1)
 
     name, parent_name = parse_name(name, frame.f_globals)
     logger = get_logger(name, parent_name)
@@ -24,11 +29,26 @@ def create_logger_record(
         msg=format_message(message),
         args=args,
         exc_info=exc_info,
+        func=frame.f_code.co_name,
         extra=kwargs,
         sinfo=None,
     )
     logger.handle(record)
     return True
+
+
+def _caller_frame(depth: int):
+    """Return the frame ``depth`` levels above the caller of this function.
+
+    Like the standard library, an out-of-range depth falls back to the
+    outermost frame instead of failing.
+    """
+    frame = inspect.currentframe().f_back  # the function calling us
+    for _ in range(depth):
+        if frame.f_back is None:
+            break
+        frame = frame.f_back
+    return frame
 
 
 def parse_name(custom_name: str, frame_info: Dict) -> Tuple[str, str]:
