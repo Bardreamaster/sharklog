@@ -11,8 +11,10 @@ def create_logger_record(
     frame = inspect.currentframe().f_back.f_back.f_back  # type: ignore
     assert frame
 
-    name, parent_name = parse_name(name, frame.f_globals)
-    logger = get_logger(name, parent_name)
+    name, _ = parse_name(name, frame.f_globals)
+    # Plain getLogger: level and handlers are inherited through the standard
+    # logger hierarchy (e.g. from a package logger configured with init()).
+    logger = logging.getLogger(name)
     if not logger.isEnabledFor(level):
         return False
 
@@ -40,16 +42,6 @@ def parse_name(custom_name: str, frame_info: Dict) -> Tuple[str, str]:
             module_name = "interactive"
     parent_module_name = module_name.split(".")[0]
     return module_name, parent_module_name
-
-
-def get_logger(name: str, parent_name: str):
-    logger = logging.getLogger(name)
-    if not logger.level:
-        parent_logger = logging.getLogger(parent_name)
-        logger.level = parent_logger.level
-    if not logger.level:
-        logger.level = logging.root.level
-    return logger
 
 
 def parse_filename(frame_info: Dict) -> str:

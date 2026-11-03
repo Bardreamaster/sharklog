@@ -106,7 +106,7 @@ logging.warning("warning message")
 logging.error("error message")
 ```
 
-- Finally, you can set the logging level for the package in the main script which using the package:
+- Finally, configure the package from the main script which uses it. `init()` configures a single logger (and, through the standard logger hierarchy, everything below it), so pass the package name to enable output for the whole package:
 
 ```python
 # main.py
@@ -116,9 +116,9 @@ from parent_package import parent_module
 from parent_package.sub_package import sub_module
 
 if __name__ == "__main__":
-    logging.init(debug=True)    # init current logger with level=logging.DEBUG
-    # or logging.init(level=logging.DEBUG)
-    # logging inside the package will use the level set here
+    logging.init(debug=True)                    # logger of main.py itself
+    logging.init("parent_package", debug=True)  # every `parent_package.*` logger
+    # or logging.init("parent_package", level=logging.INFO)
 ```
 
 Or if you want to change the logging level for a specific module, you can set it in the module by:
