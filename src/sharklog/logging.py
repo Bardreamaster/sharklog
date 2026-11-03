@@ -2,8 +2,15 @@ import inspect
 import logging
 import sys
 
+# Re-export the standard library API so that ``from sharklog import logging``
+# can replace ``import logging``. The helpers defined below (getLogger, debug,
+# info, ...) intentionally shadow their standard library counterparts.
+from logging import *  # noqa: F401,F403
+
 from sharklog import settings, utils
 from sharklog.formatter import ColoredFormatter
+
+__all__ = [*logging.__all__, "init", "reset_all"]
 
 
 def init(name: str = None, debug: bool = False, level=None, **kwargs):
