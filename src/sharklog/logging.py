@@ -26,26 +26,8 @@ def init(name: str = None, debug: bool = False, level=None, **kwargs):
     )
     handler = logging.StreamHandler()
     handler.setFormatter(formatter)
-    frame = inspect.currentframe().f_back
     if not name:
-        name = frame.f_globals["__name__"]
-        if name == "__main__":
-            try:
-                name = frame.f_globals["__file__"].split(".")[0].replace("/", ".")
-            except KeyError:
-                name = "interactive"
-            if name.endswith("__main__"):
-                parts = name.split(".")
-                if len(parts) >= 2:
-                    # Find the last non-empty part before __main__
-                    for i in range(len(parts) - 2, -1, -1):
-                        if parts[i]:
-                            name = f"{parts[i]}.__main__"
-                            break
-                    else:
-                        name = "__main__"
-                else:
-                    name = "__main__"
+        name = utils.resolve_name(inspect.currentframe().f_back.f_globals)
     logger = logging.getLogger(name)
     logger.addHandler(handler)
     logger.setLevel(kwargs["level"])
@@ -78,13 +60,7 @@ def reset_all(debug=False, level=None, **kwargs):
 
 def getLogger(name=None):
     if not name:
-        frame = inspect.currentframe().f_back
-        name = frame.f_globals["__name__"]
-        if name == "__main__":
-            try:
-                name = frame.f_globals["__file__"].split(".")[0].replace("/", ".")
-            except KeyError:
-                name = "interactive"
+        name = utils.resolve_name(inspect.currentframe().f_back.f_globals)
     return logging.getLogger(name)
 
 
