@@ -117,6 +117,7 @@ def critical(message, *args, **kwargs):
 fatal = critical
 
 
-def exception(message, *args, **kwargs):
-    kwargs["exc_info"] = kwargs.get("exc_info", sys.exc_info())
-    utils.create_logger_record(logging.ERROR, message, *args, **kwargs)
+def exception(message, *args, exc_info=True, **kwargs):
+    utils.create_logger_record(
+        logging.ERROR, message, *args, exc_info=exc_info, **kwargs
+    )
