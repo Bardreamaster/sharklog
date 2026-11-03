@@ -47,9 +47,22 @@ def init(name: str = None, debug: bool = False, level=None, **kwargs):
                 else:
                     name = "__main__"
     logger = logging.getLogger(name)
-    logger.addHandler(handler)
+    _replace_sharklog_handler(logger, handler)
     logger.setLevel(kwargs["level"])
     return logger
+
+
+def _replace_sharklog_handler(logger, handler):
+    """Attach ``handler``, dropping any handler a previous init() added.
+
+    Calling init() again (e.g. to change the level or format) must not stack
+    handlers, otherwise every message is printed once per call.
+    """
+    for old_handler in list(logger.handlers):
+        if getattr(old_handler, "_sharklog_handler", False):
+            logger.removeHandler(old_handler)
+    handler._sharklog_handler = True
+    logger.addHandler(handler)
 
 
 def reset_all(debug=False, level=None, **kwargs):
