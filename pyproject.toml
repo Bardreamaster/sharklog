@@ -21,6 +21,7 @@ Homepage = "https://github.com/Bardreamaster/sharklog"
 
 [dependency-groups]
 dev = [
+    "pytest>=8",
     "sharklog",
 ]
 
@@ -32,6 +33,9 @@ environments = [
 
 [tool.uv.sources]
 sharklog = { workspace = true }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
 
 [tool.ruff.lint]
 select = ["I"]

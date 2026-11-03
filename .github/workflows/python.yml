@@ -9,3 +9,16 @@ jobs:
       - uses: chartboost/ruff-action@v1
         with:
           args: check --extend-select I
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Run tests
+        run: uv run --python ${{ matrix.python-version }} pytest -v
