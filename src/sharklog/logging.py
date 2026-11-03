@@ -8,7 +8,7 @@ import sys
 from logging import *  # noqa: F401,F403
 
 from sharklog import settings, utils
-from sharklog.formatter import ColoredFormatter
+from sharklog.formatter import ColoredFormatter, supports_color
 
 __all__ = [*logging.__all__, "init", "reset_all"]
 
@@ -24,12 +24,15 @@ def init(name: str = None, debug: bool = False, level=None, **kwargs):
     kwargs["format"] = kwargs.get("format", settings.DEFAULT_FORMAT)
 
     custom_format = kwargs.get("format")
-    formatter = ColoredFormatter(
+    handler = logging.StreamHandler()
+    formatter_class = (
+        ColoredFormatter if supports_color(handler.stream) else logging.Formatter
+    )
+    formatter = formatter_class(
         fmt=custom_format,
         datefmt=kwargs.get("datefmt"),
         style=kwargs.get("style", "%"),
     )
-    handler = logging.StreamHandler()
     handler.setFormatter(formatter)
     if not name:
         name = utils.resolve_name(inspect.currentframe().f_back.f_globals)

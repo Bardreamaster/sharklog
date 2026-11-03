@@ -1,4 +1,5 @@
 import logging
+import os
 
 COLOR_RESET = "\033[0m"
 COLOR_RED = "\033[31m"
@@ -14,6 +15,24 @@ LEVEL_COLORS = {
     logging.ERROR: COLOR_RED,
     logging.CRITICAL: COLOR_CHERRY,
 }
+
+
+def supports_color(stream) -> bool:
+    """Whether ANSI colors should be written to ``stream``.
+
+    Honours the NO_COLOR (https://no-color.org) and FORCE_COLOR conventions,
+    otherwise colors are only used when the stream is a terminal, so that
+    redirected output (files, pipes, CI logs) stays free of escape codes.
+    """
+    if os.environ.get("NO_COLOR"):
+        return False
+    if os.environ.get("FORCE_COLOR"):
+        return True
+    isatty = getattr(stream, "isatty", None)
+    try:
+        return bool(isatty and isatty())
+    except ValueError:  # closed stream
+        return False
 
 
 class ColoredFormatter(logging.Formatter):
