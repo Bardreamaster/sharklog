@@ -3,7 +3,7 @@ import logging
 import sys
 
 from sharklog import settings, utils
-from sharklog.formatter import ColoredFormatter
+from sharklog.formatter import ColoredFormatter, supports_color
 
 
 def init(name: str = None, debug: bool = False, level=None, **kwargs):
@@ -19,12 +19,15 @@ def init(name: str = None, debug: bool = False, level=None, **kwargs):
     kwargs["format"] = kwargs.get("format", settings.DEFAULT_FORMAT)
 
     custom_format = kwargs.get("format")
-    formatter = ColoredFormatter(
+    handler = logging.StreamHandler()
+    formatter_class = (
+        ColoredFormatter if supports_color(handler.stream) else logging.Formatter
+    )
+    formatter = formatter_class(
         fmt=custom_format,
         datefmt=kwargs.get("datefmt"),
         style=kwargs.get("style", "%"),
     )
-    handler = logging.StreamHandler()
     handler.setFormatter(formatter)
     frame = inspect.currentframe().f_back
     if not name:
