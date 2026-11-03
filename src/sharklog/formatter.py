@@ -18,6 +18,11 @@ LEVEL_COLORS = {
 
 class ColoredFormatter(logging.Formatter):
     def format(self, record):
-        level_color = LEVEL_COLORS.get(record.levelno, COLOR_RESET)
-        record.levelname = f"{level_color}{record.levelname}{COLOR_RESET}"
-        return super().format(record)
+        level_color = LEVEL_COLORS.get(record.levelno)
+        if level_color is None:
+            return super().format(record)
+        # The record is shared by every handler it reaches (including those of
+        # parent loggers), so color a copy instead of mutating the original.
+        colored = logging.makeLogRecord(record.__dict__)
+        colored.levelname = f"{level_color}{record.levelname}{COLOR_RESET}"
+        return super().format(colored)
