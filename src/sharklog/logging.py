@@ -83,30 +83,36 @@ def getLogger(name=None):
     return logging.getLogger(name)
 
 
+# Each helper calls utils.create_logger_record directly (rather than going
+# through log()) so that the caller can be found at a fixed stack depth.
 def log(level, message, *args, **kwargs):
     utils.create_logger_record(level, message, *args, **kwargs)
 
 
 def debug(message, *args, **kwargs):
-    log(logging.DEBUG, message, *args, **kwargs)
+    utils.create_logger_record(logging.DEBUG, message, *args, **kwargs)
 
 
 def info(message, *args, **kwargs):
-    log(logging.INFO, message, *args, **kwargs)
+    utils.create_logger_record(logging.INFO, message, *args, **kwargs)
 
 
 def warning(message, *args, **kwargs):
-    log(logging.WARNING, message, *args, **kwargs)
+    utils.create_logger_record(logging.WARNING, message, *args, **kwargs)
 
 
 def error(message, *args, **kwargs):
-    log(logging.ERROR, message, *args, **kwargs)
+    utils.create_logger_record(logging.ERROR, message, *args, **kwargs)
 
 
 def critical(message, *args, **kwargs):
-    log(logging.CRITICAL, message, *args, **kwargs)
+    utils.create_logger_record(logging.CRITICAL, message, *args, **kwargs)
 
 
-def exception(message, *args, **kwargs):
-    kwargs["exc_info"] = kwargs.get("exc_info", sys.exc_info())
-    log(logging.ERROR, message, *args, **kwargs)
+fatal = critical
+
+
+def exception(message, *args, exc_info=True, **kwargs):
+    utils.create_logger_record(
+        logging.ERROR, message, *args, exc_info=exc_info, **kwargs
+    )
