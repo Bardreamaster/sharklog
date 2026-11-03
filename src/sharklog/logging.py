@@ -1,6 +1,5 @@
 import inspect
 import logging
-import sys
 
 # Re-export the standard library API so that ``from sharklog import logging``
 # can replace ``import logging``. The helpers defined below (getLogger, debug,
